@@ -44,7 +44,20 @@ function iniciar() {
                 response.end();
             });
 
-        } else if (pathname == '/css/style.css') {
+        } else if (pathname == '/domino') {
+            response.writeHead(200, {
+                "Content-Type": "text/html; charset=utf-8"
+            });
+
+            fs.readFile('./domino.html', function (err, sortida) {
+                response.writeHead(200, {
+                    'Content-Type': 'text/html'
+                });
+                response.write(sortida);
+                response.end();
+            });
+
+        }else if (pathname == '/css/style.css') {
             response.writeHead(200, {
                 "Content-Type": "text/html; charset=utf-8"
             });
@@ -72,12 +85,26 @@ function iniciar() {
                 response.end();
             });
 
-        }  else if (pathname == '/js/script.js') {
+        }  else if (pathname == '/js/scriptHome.js') {
             response.writeHead(200, {
                 "Content-Type": "text/html; charset=utf-8"
             });
 
-            fs.readFile('./js/script.js', function (err, sortida) {
+            fs.readFile('./js/scriptHome.js', function (err, sortida) {
+                response.writeHead(200, {
+                    'Content-Type': 'text/css'
+                });
+
+                response.write(sortida);
+                response.end();
+            });
+
+        } else if (pathname == '/js/scriptJoc.js') {
+            response.writeHead(200, {
+                "Content-Type": "text/html; charset=utf-8"
+            });
+
+            fs.readFile('./js/scriptJoc.js', function (err, sortida) {
                 response.writeHead(200, {
                     'Content-Type': 'text/css'
                 });
@@ -100,9 +127,9 @@ function iniciar() {
             }else if(id == 0 && players == 1){
                 id = 2;
                 numPlayers.push(2);
-            }else if(id != 0){
+            }/*else if(id != 0){
                 id = 999;
-            }else {
+            }*/else {
                 id;
             }
             console.log("El jugador "+id+" ha entrat. Num players "+numPlayers.length);
@@ -110,7 +137,7 @@ function iniciar() {
             var objecteInicial = {
                 "id" : id,
                 "jugadors": numPlayers
-            }
+            };
 
             response.write(JSON.stringify(objecteInicial));
             response.end();
@@ -123,16 +150,141 @@ function iniciar() {
                 "id" : id,
                 "pieces":[
                     "0:0","0:1","0:2","0:3","0:4","0:5","0:6",
-                    "1:0","1:1","1:2","1:3","1:4","1:5","1:6",
-                    "2:0","2:1","2:2","2:3","2:4","2:5","2:6",
-                    "3:0","3:1","3:2","3:3","3:4","3:5","3:6",
-                    "4:0","4:1","4:2","4:3","4:4","4:5","4:6",
-                    "5:0","5:1","5:2","5:3","5:4","5:5","5:6",
-                    "6:0","6:1","6:2","6:3","6:4","6:5","6:6"
-                ]
+                    "1:1","1:2","1:3","1:4","1:5","1:6",
+                    "2:2","2:3","2:4","2:5","2:6",
+                    "3:3","3:4","3:5","3:6",
+                    "4:4","4:5","4:6",
+                    "5:5","5:6",
+                    "6:6"
+                ],
+                "p00": {
+                    "u": 0,
+                    "d": 0
+                },
+                "p01": {
+                    "u": 0,
+                    "d": 1
+                },
+                "p02": {
+                    "u": 0,
+                    "d": 2
+                },
+                "p03": {
+                    "u": 0,
+                    "d": 3
+                },
+                "p04": {
+                    "u": 0,
+                    "d": 4
+                },
+                "p05": {
+                    "u": 0,
+                    "d": 5
+                },
+                "p06": {
+                    "u": 0,
+                    "d": 6
+                },
+                "p11": {
+                    "u": 1,
+                    "d": 1
+                },
+                "p12": {
+                    "u": 1,
+                    "d": 2
+                },
+                "p13": {
+                    "u": 1,
+                    "d": 3
+                },
+                "p14": {
+                    "u": 1,
+                    "d": 4
+                },
+                "p15": {
+                    "u": 1,
+                    "d": 5
+                },
+                "p16": {
+                    "u": 1,
+                    "d": 6
+                },
+                "p22": {
+                    "u": 2,
+                    "d": 2
+                },
+                "p23": {
+                    "u": 2,
+                    "d": 3
+                },
+                "p24": {
+                    "u": 2,
+                    "d": 4
+                },
+                "p25": {
+                    "u": 2,
+                    "d": 5
+                },
+                "p26": {
+                    "u": 2,
+                    "d": 6
+                },
+                "p33": {
+                    "u": 3,
+                    "d": 3
+                },
+                "p34": {
+                    "u": 3,
+                    "d": 4
+                },
+                "p35": {
+                    "u": 3,
+                    "d": 5
+                },
+                "p36": {
+                    "u": 3,
+                    "d": 6
+                },
+                "p44": {
+                    "u": 4,
+                    "d": 4
+                },
+                "p45": {
+                    "u": 4,
+                    "d": 5
+                },
+                "p46": {
+                    "u": 4,
+                    "d": 6
+                },
+                "p55": {
+                    "u": 5,
+                    "d": 5
+                },
+                "p56": {
+                    "u": 5,
+                    "d": 6
+                },
+                "p66": {
+                    "u": 6,
+                    "d": 6
+                },
+                "p24": {
+                    "u": 2,
+                    "d": 4
+                }
+                /*"pieces":[
+                 "0:0","0:1","0:2","0:3","0:4","0:5","0:6",
+                 "1:0","1:1","1:2","1:3","1:4","1:5","1:6",
+                 "2:0","2:1","2:2","2:3","2:4","2:5","2:6",
+                 "3:0","3:1","3:2","3:3","3:4","3:5","3:6",
+                 "4:0","4:1","4:2","4:3","4:4","4:5","4:6",
+                 "5:0","5:1","5:2","5:3","5:4","5:5","5:6",
+                 "6:0","6:1","6:2","6:3","6:4","6:5","6:6"
+                 ]*/
             };
 
-            response.write(JSON.stringify(objecteInicial));
+            response.write(JSON.stringify(objecteJoc));
             response.end();
         } else if(pathname == '/playedPiece') {
             response.writeHead(200, {
@@ -140,9 +292,134 @@ function iniciar() {
             });
             playedPieces.push(consulta['piece']);
 
-            var objecteJoc = {
+            var objecteTirada = {
                 "id" : id,
                 "pieces":[
+                    "0:0","0:1","0:2","0:3","0:4","0:5","0:6",
+                    "1:1","1:2","1:3","1:4","1:5","1:6",
+                    "2:2","2:3","2:4","2:5","2:6",
+                    "3:3","3:4","3:5","3:6",
+                    "4:4","4:5","4:6",
+                    "5:5","5:6",
+                    "6:6"
+                ],
+                "p00": {
+                    "u": 0,
+                    "d": 0
+                },
+                "p01": {
+                    "u": 0,
+                    "d": 1
+                },
+                "p02": {
+                    "u": 0,
+                    "d": 2
+                },
+                "p03": {
+                    "u": 0,
+                    "d": 3
+                },
+                "p04": {
+                    "u": 0,
+                    "d": 4
+                },
+                "p05": {
+                    "u": 0,
+                    "d": 5
+                },
+                "p06": {
+                    "u": 0,
+                    "d": 6
+                },
+                "p11": {
+                    "u": 1,
+                    "d": 1
+                },
+                "p12": {
+                    "u": 1,
+                    "d": 2
+                },
+                "p13": {
+                    "u": 1,
+                    "d": 3
+                },
+                "p14": {
+                    "u": 1,
+                    "d": 4
+                },
+                "p15": {
+                    "u": 1,
+                    "d": 5
+                },
+                "p16": {
+                    "u": 1,
+                    "d": 6
+                },
+                "p22": {
+                    "u": 2,
+                    "d": 2
+                },
+                "p23": {
+                    "u": 2,
+                    "d": 3
+                },
+                "p24": {
+                    "u": 2,
+                    "d": 4
+                },
+                "p25": {
+                    "u": 2,
+                    "d": 5
+                },
+                "p26": {
+                    "u": 2,
+                    "d": 6
+                },
+                "p33": {
+                    "u": 3,
+                    "d": 3
+                },
+                "p34": {
+                    "u": 3,
+                    "d": 4
+                },
+                "p35": {
+                    "u": 3,
+                    "d": 5
+                },
+                "p36": {
+                    "u": 3,
+                    "d": 6
+                },
+                "p44": {
+                    "u": 4,
+                    "d": 4
+                },
+                "p45": {
+                    "u": 4,
+                    "d": 5
+                },
+                "p46": {
+                    "u": 4,
+                    "d": 6
+                },
+                "p55": {
+                    "u": 5,
+                    "d": 5
+                },
+                "p56": {
+                    "u": 5,
+                    "d": 6
+                },
+                "p66": {
+                    "u": 6,
+                    "d": 6
+                },
+                "p24": {
+                    "u": 2,
+                    "d": 4
+                }
+                /*"pieces":[
                     "0:0","0:1","0:2","0:3","0:4","0:5","0:6",
                     "1:0","1:1","1:2","1:3","1:4","1:5","1:6",
                     "2:0","2:1","2:2","2:3","2:4","2:5","2:6",
@@ -150,11 +427,11 @@ function iniciar() {
                     "4:0","4:1","4:2","4:3","4:4","4:5","4:6",
                     "5:0","5:1","5:2","5:3","5:4","5:5","5:6",
                     "6:0","6:1","6:2","6:3","6:4","6:5","6:6"
-                ]
+                ]*/
             };
 
             console.log("El jugador "+consulta['idJugador']+" ha tirat "+consulta['piece']);
-            response.write(JSON.stringify(objecteJoc));
+            response.write(JSON.stringify(objecteTirada));
             response.end();
 
         } else {
@@ -170,7 +447,7 @@ function iniciar() {
 
 
     http.createServer(onRequest).listen(8887);
-    console.log("Servidor iniciat. http://localhost:8887/index");
+    console.log("Servidor iniciat. http://localhost:8887/home");
 }
 
 exports.iniciar = iniciar;

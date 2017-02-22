@@ -16,58 +16,68 @@
 var id = 0;
 var pieces = [];
 var playedPiece;
+var id_interval;
 
 window.onload = function () {
     var xhr;
     var dada;
-
-    var id_interval = setInterval(function () {
+    cridaAJAXJoc('/start?idJugador=' + id);
+    /*id_interval = setInterval(function () {
         //amb aixo creem el JSON amb les dades del servidor
         cridaAJAXinicial('/index?idJugador=' + id);
-    }, 30000);
+    }, 3000);*/
 
 };
 
-//Crida AJAX que només s'executa al entrar a la pàgina
-    function cridaAJAXinicial(url) {
-        xhr = new XMLHttpRequest();
+///////////////////////////////////////////////////////
+//Crida AJAX que només s'executa al entrar al joc
+function cridaAJAXJoc(url) {
+    xhr = new XMLHttpRequest();
 
-        if (!xhr) {
-            alert('problemes amb XHR');
-            return false;
-        }
-        xhr.onreadystatechange = callbackAJAXinicial;
-        xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
-        xhr.send(null);
+    if (!xhr) {
+        alert('problemes amb XHR');
+        return false;
     }
-//Callback AJAX que només s'executa al entrar a la pàgina
-    function callbackAJAXinicial() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                //dades = xhr.response;
-                dada = JSON.parse(xhr.response);
-                mostrarInici();
-            } else {
-                console.log('problemes amb l\'AJAX');
-            }
+    xhr.onreadystatechange = callbackAJAXJoc;
+    xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
+    xhr.send(null);
+}
+//Callback AJAX que només s'executa al entrar al joc
+function callbackAJAXJoc() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+            //dades = xhr.response;
+            dada = JSON.parse(xhr.response);
+            mostrarJoc();
+        } else {
+            console.log('problemes amb l\'AJAX');
         }
+    }
 
-    }
+}
 
 /**
- * Method that creates the pieces
+ * Method that shows game page
  */
-function mostrarInici() {
-    var jugadors = dada.jugadors;
-    id = dada.id;
-    if(jugadors.length < 2){
-        document.getElementById("missatge").innerText = labels.missatgeinici_wait;
-    } else if(jugadors.length == 2){
-        document.getElementById("missatge").innerText = labels.missatgeinici_play;
-        document.getElementById("btnJugar").attributes.removeNamedItem("hidden");
+function mostrarJoc() {
+    pieces = dada.pieces;
+    for (var i=0;i<pieces.length;i++) {
+        var b = document.createElement('button');
+        b.id = pieces[i];
+        b.innerText = '<img src="img/0,0.png" alt="Smiley face" height="42" width="42">';//"<img src=img\\"+pieces[i]+">";
+        b.className = "piece";
+        b.onclick = function(e) {
+            //onClickPiece(b.id);
+            playedPiece = e.target.id;
+            cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
+        };
+        document.getElementById('domino').appendChild(b);
+
+        console.log(pieces[i]);
     }
 }
 
+//////////////////////////////////////////////////////////////////////
 //Crida AJAX que s'executa quan els jugadors tiren una fitxa
 function cridarAJAXjugada(url) {
     xhr = new XMLHttpRequest();
@@ -95,12 +105,12 @@ function callbackAJAXjugada() {
 
 }
 
-function mostrarJoc() {
+function mostrarJoc2() {
     pieces = dada.pieces;
     for (var i=0;i<pieces.length;i++) {
         var b = document.createElement('button');
         b.id = pieces[i];
-        b.innerText = peces[i];
+        b.innerText = pieces[i];
         b.className = "piece";
         b.onclick = function(e) {
             //onClickPiece(b.id);
