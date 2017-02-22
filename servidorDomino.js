@@ -31,12 +31,12 @@ function iniciar() {
             nombre = nombre.charCodeAt(0);
         console.log("Petició per a  " + pathname + " rebuda.");
 
-        if (pathname == '/index') {
+        if (pathname == '/home') {
             response.writeHead(200, {
                 "Content-Type": "text/html; charset=utf-8"
             });
 
-            fs.readFile('./domino.html', function (err, sortida) {
+            fs.readFile('./home.html', function (err, sortida) {
                 response.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
@@ -44,8 +44,7 @@ function iniciar() {
                 response.end();
             });
 
-        }
-        else if (pathname == '/css/style.css') {
+        } else if (pathname == '/css/style.css') {
             response.writeHead(200, {
                 "Content-Type": "text/html; charset=utf-8"
             });
@@ -59,8 +58,21 @@ function iniciar() {
                 response.end();
             });
 
-        }
-        else if (pathname == '/js/script.js') {
+        } else if (pathname == '/js/properties.js') {
+            response.writeHead(200, {
+                "Content-Type": "text/html; charset=utf-8"
+            });
+
+            fs.readFile('./js/properties.js', function (err, sortida) {
+                response.writeHead(200, {
+                    'Content-Type': 'text/css'
+                });
+
+                response.write(sortida);
+                response.end();
+            });
+
+        }  else if (pathname == '/js/script.js') {
             response.writeHead(200, {
                 "Content-Type": "text/html; charset=utf-8"
             });
@@ -74,22 +86,24 @@ function iniciar() {
                 response.end();
             });
 
-        }
-
-        else if (pathname == '/index') {
+        } else if (pathname == '/index') {
             response.writeHead(200, {
                 "Content-Type": "application/json charset=utf-8"
             });
+
             var players = numPlayers.length;
-            //playedPieces.push(consulta['piece']);
-            if( players == 0){
+            var id = consulta['idJugador'];
+            if(id == 0 && players == 0){
                 id = 1;
                 numPlayers.push(1);
-            }else if(players == 1){
+                //problemaaa
+            }else if(id == 0 && players == 1){
                 id = 2;
                 numPlayers.push(2);
-            }else{
+            }else if(id != 0){
                 id = 999;
+            }else {
+                id;
             }
             console.log("El jugador "+id+" ha entrat. Num players "+numPlayers.length);
 

@@ -21,8 +21,11 @@ window.onload = function () {
     var xhr;
     var dada;
 
-    //amb aixo creem el JSON amb les dades del servidor
-    cridaAJAXinicial('/index?idJugador=' + id);
+    var id_interval = setInterval(function () {
+        //amb aixo creem el JSON amb les dades del servidor
+        cridaAJAXinicial('/index?idJugador=' + id);
+    }, 30000);
+
 };
 
 //Crida AJAX que només s'executa al entrar a la pàgina
@@ -43,7 +46,7 @@ window.onload = function () {
             if (xhr.status === 200) {
                 //dades = xhr.response;
                 dada = JSON.parse(xhr.response);
-                //mostrarDades();
+                mostrarInici();
             } else {
                 console.log('problemes amb l\'AJAX');
             }
@@ -54,9 +57,16 @@ window.onload = function () {
 /**
  * Method that creates the pieces
  */
-function mostrarDades() {
-        var jugadors = dada.
+function mostrarInici() {
+    var jugadors = dada.jugadors;
+    id = dada.id;
+    if(jugadors.length < 2){
+        document.getElementById("missatge").innerText = labels.missatgeinici_wait;
+    } else if(jugadors.length == 2){
+        document.getElementById("missatge").innerText = labels.missatgeinici_play;
+        document.getElementById("btnJugar").attributes.removeNamedItem("hidden");
     }
+}
 
 //Crida AJAX que s'executa quan els jugadors tiren una fitxa
 function cridarAJAXjugada(url) {
