@@ -60,11 +60,15 @@ function callbackAJAXJoc() {
  * Method that shows game page
  */
 function mostrarJoc() {
+    var p=3;
     pieces = dada.pieces;
     for (var i=0;i<pieces.length;i++) {
         var b = document.createElement('button');
         b.id = pieces[i];
-        b.innerText = '<img src="img/0,0.png" alt="Smiley face" height="42" width="42">';//"<img src=img\\"+pieces[i]+">";
+        var srcImg ="/imatge?img="+pieces[i]+".png";
+        var idImg = "p"+pieces[i];
+        b.innerHTML = '<img src='+srcImg+' id='+idImg+' height="90" width="45">';
+        //"<img src=img\\"+pieces[i]+">";
         b.className = "piece";
         b.onclick = function(e) {
             //onClickPiece(b.id);

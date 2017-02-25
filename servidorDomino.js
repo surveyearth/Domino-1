@@ -19,6 +19,9 @@ var querystring = require("querystring");
 var fs = require('fs');
 var numPlayers = [];
 var playedPieces = [];
+var pieces = ["0,0.png","0,1.png","0,2.png","0,3.png","0,4.png","0,5.png","0,6.png","1,1.png","1,2.png","1,3.png","1,4.png","1,5.png","1,6.png",
+              "2,2.png","2,3.png","2,4.png", "2,5.png", "2,6.png", "3,3.png", "3,4.png", "3,5.png","3,6.png","4,4.png", "4,5.png", "4,6.png",
+              "5,5.png", "5,6.png", "6,6.png"];
 
 function iniciar() {
     function onRequest(request, response) {
@@ -113,6 +116,33 @@ function iniciar() {
                 response.end();
             });
 
+        } else if (pathname == '/imatge') {
+            response.writeHead(200, {
+                "Content-Type": "text/html; charset=utf-8"
+            });
+
+            fs.readFile('./img/'+consulta['img'], function (err, sortida) {
+                response.writeHead(200, {
+                    'Content-Type': 'image/png'
+                });
+
+                response.write(sortida);
+                response.end();
+            });
+            /*for(var i = 0; i < pieces.length; i++){
+                response.writeHead(200, {
+                    "Content-Type": "img/png; charset=utf-8"
+                });
+
+                fs.readFile('./img/'+pieces, function (err, sortida) {
+                    response.writeHead(200, {
+                        'Content-Type': 'img/png'
+                    });
+
+                    response.write(sortida);
+                    response.end();
+                });
+            }*/
         } else if (pathname == '/index') {
             response.writeHead(200, {
                 "Content-Type": "application/json charset=utf-8"
@@ -149,13 +179,13 @@ function iniciar() {
             var objecteJoc = {
                 "id" : id,
                 "pieces":[
-                    "0:0","0:1","0:2","0:3","0:4","0:5","0:6",
-                    "1:1","1:2","1:3","1:4","1:5","1:6",
-                    "2:2","2:3","2:4","2:5","2:6",
-                    "3:3","3:4","3:5","3:6",
-                    "4:4","4:5","4:6",
-                    "5:5","5:6",
-                    "6:6"
+                    "0,0","0,1","0,2","0,3","0,4","0,5","0,6",
+                    "1,1","1,2","1,3","1,4","1,5","1,6",
+                    "2,2","2,3","2,4","2,5","2,6",
+                    "3,3","3,4","3,5","3,6",
+                    "4,4","4,5","4,6",
+                    "5,5","5,6",
+                    "6,6"
                 ],
                 "p00": {
                     "u": 0,

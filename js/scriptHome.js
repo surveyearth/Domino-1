@@ -19,7 +19,7 @@ var id_interval;
 window.onload = function () {
     var xhr;
     var dada;
-
+    document.getElementById("missatge").innerText = labels.missatgeinici_wait;
     id_interval = setInterval(function () {
         //amb aixo creem el JSON amb les dades del servidor
         cridaAJAXinicial('/index?idJugador=' + id);
@@ -64,9 +64,13 @@ function mostrarInici() {
     id = dada.id;
     if(jugadors.length < 2){
         document.getElementById("missatge").innerText = labels.missatgeinici_wait;
-    } else if(jugadors.length == 2){
+    } else if(jugadors.length == 2 && id != 0){
         document.getElementById("missatge").innerText = labels.missatgeinici_play;
         document.getElementById("btnJugar").attributes.removeNamedItem("hidden");
+        clearInterval(id_interval);
+    } else if(id = 0){
+        document.getElementById("missatge").innerText = labels.missatgeinici_full;
+        //document.getElementById("btnJugar").attributes.addNamedItem("hidden");
         clearInterval(id_interval);
     }
 }
