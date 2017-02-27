@@ -6,12 +6,20 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="js/properties.js"></script>
     <script type="text/javascript" src="js/scriptHome.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="js/scriptJoc.js"></script>
 </head>
 <body>
-INICIAL
-<div id="missatge">
-
+<div id="homeDiv">
+    <div id="missatge"></div>
+    <button type="button" id="btnJugar" onclick="toGame();" href="" hidden>JUGAR</button>
 </div>
-<button type="button" id="btnJugar" onclick="location.href='/domino'" hidden>JUGAR</button>
+
+<div id="dominoDiv" hidden>
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <div id="domino"></div>
+</div>
+
+<div id="idDiv"></div>
 </body>
 </html>

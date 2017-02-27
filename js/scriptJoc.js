@@ -14,20 +14,21 @@
  * Desenvolupament en entorn client. Escola del clot
  */
 var id = 0;
+var rightMove;
 var pieces = [];
 var playedPiece;
 var id_interval;
 
-window.onload = function () {
+/*window.onload = function () {
     var xhr;
     var dada;
     cridaAJAXJoc('/start?idJugador=' + id);
-    /*id_interval = setInterval(function () {
+    //id_interval = setInterval(function () {
         //amb aixo creem el JSON amb les dades del servidor
         cridaAJAXinicial('/index?idJugador=' + id);
-    }, 3000);*/
+    //}, 3000);};*/
 
-};
+
 
 ///////////////////////////////////////////////////////
 //Crida AJAX que només s'executa al entrar al joc
@@ -64,9 +65,10 @@ function mostrarJoc() {
     pieces = dada.pieces;
     for (var i=0;i<pieces.length;i++) {
         var b = document.createElement('button');
-        b.id = pieces[i];
+        b.id = "p"+pieces[i];
+        b.draggable = true;
         var srcImg ="/imatge?img="+pieces[i]+".png";
-        var idImg = "p"+pieces[i];
+        var idImg = pieces[i];
         b.innerHTML = '<img src='+srcImg+' id='+idImg+' height="90" width="45">';
         //"<img src=img\\"+pieces[i]+">";
         b.className = "piece";
@@ -76,7 +78,7 @@ function mostrarJoc() {
             cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
         };
         document.getElementById('domino').appendChild(b);
-
+        document.getElementById('idDiv').innerText = "Piece: "+dada.id;
         console.log(pieces[i]);
     }
 }
@@ -101,7 +103,7 @@ function callbackAJAXjugada() {
         if (xhr.status === 200) {
             //dades = xhr.response;
             dada = JSON.parse(xhr.response);
-            mostrarJoc();
+            mostrarJugada();
         } else {
             console.log('problemes amb l\'AJAX');
         }
@@ -109,36 +111,24 @@ function callbackAJAXjugada() {
 
 }
 
-function mostrarJoc2() {
-    pieces = dada.pieces;
-    for (var i=0;i<pieces.length;i++) {
-        var b = document.createElement('button');
-        b.id = pieces[i];
-        b.innerText = pieces[i];
-        b.className = "piece";
-        b.onclick = function(e) {
-            //onClickPiece(b.id);
-            playedPiece = e.target.id;
-            cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
-        };
-        document.getElementById('domino').appendChild(b);
+function mostrarJugada() {
+    piece = dada.tirada;
+    id = dada.id;
+    rightMove = dada.correct;
+    document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove;
 
-        console.log(pieces[i]);
-    }
+
+}
+function allowDrop(ev) {
+    ev.preventDefault();
 }
 
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
 
-    /*function dibuixarGrafic() {
-
-        var data = new google.visualization.DataTable(dades);
-        var options = {
-            'title': 'cotització setmanal',
-            'width': 800,
-            'height': 400
-        };
-
-        var chart = new google.charts.Line(document.getElementById('grafic'));
-        chart.draw(data, options);
-    }
-google.charts.load('current', { 'packages': ['line'] });
-google.charts.setOnLoadCallback(dibuixarGrafic);*/
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}

@@ -15,6 +15,8 @@
  */
 var id = 0;
 var id_interval;
+var pieces = [];
+var playedPiece;
 
 window.onload = function () {
     var xhr;
@@ -68,9 +70,15 @@ function mostrarInici() {
         document.getElementById("missatge").innerText = labels.missatgeinici_play;
         document.getElementById("btnJugar").attributes.removeNamedItem("hidden");
         clearInterval(id_interval);
-    } else if(id = 0){
+    } else if(jugadors.length == 2 && id == 0){
         document.getElementById("missatge").innerText = labels.missatgeinici_full;
         //document.getElementById("btnJugar").attributes.addNamedItem("hidden");
         clearInterval(id_interval);
     }
+}
+
+function toGame() {
+    document.getElementById("homeDiv").setAttribute("hidden","true");
+    document.getElementById("dominoDiv").attributes.removeNamedItem("hidden");
+    cridaAJAXJoc('/start?idJugador=' + id);
 }
