@@ -19,9 +19,11 @@ var querystring = require("querystring");
 var fs = require('fs');
 var numPlayers = [];
 var playedPieces = [];
-var pieces = ["0,0.png","0,1.png","0,2.png","0,3.png","0,4.png","0,5.png","0,6.png","1,1.png","1,2.png","1,3.png","1,4.png","1,5.png","1,6.png",
-              "2,2.png","2,3.png","2,4.png", "2,5.png", "2,6.png", "3,3.png", "3,4.png", "3,5.png","3,6.png","4,4.png", "4,5.png", "4,6.png",
-              "5,5.png", "5,6.png", "6,6.png"];
+var player1Hand  =[];
+var player2Hand  =[];
+var pieces =  ["0,0","0,1","0,2","0,3","0,4","0,5","0,6","1,1","1,2","1,3","1,4","1,5","1,6", "2,2","2,3","2,4","2,5","2,6", "3,3","3,4","3,5",
+                "3,6", "4,4","4,5","4,6", "5,5","5,6", "6,6"];
+repartirPeces(pieces);
 
 function iniciar() {
     function onRequest(request, response) {
@@ -162,6 +164,7 @@ function iniciar() {
                 "Content-Type": "application/json charset=utf-8"
             });
             console.log("jugador "+consulta['idJugador']);
+
             var objecteJoc = {
                 "id" : consulta['idJugador'],
                 "pieces":[
@@ -292,18 +295,29 @@ function iniciar() {
 
             };
 
+            var objecteJoc = {
+                "id" : consulta['idJugador'],
+                "pieces1": player1Hand,
+                "pieces2": player2Hand
+            };
             response.write(JSON.stringify(objecteJoc));
             response.end();
         } else if(pathname == '/playedPiece') {
             response.writeHead(200, {
                 "Content-Type": "text/xml; charset=utf-8"
             });
-            playedPieces.push(consulta['piece']);
+            if(consulta['costat'] == "dropDre" ){
+                playedPieces.push(consulta['piece']);
+            }else if(consulta['costat'] == "dropEsq" ){
+                playedPieces.unshift(consulta['piece']);
+            }
+
 
             var objecteTirada = {
                 "id" : consulta['idJugador'],
                 "tirada" : consulta['piece'],
-                "correct" : true
+                "correct" : true,
+                "playedPieces" : playedPieces
             };
 
             console.log("El jugador "+consulta['idJugador']+" ha tirat "+consulta['piece']);
@@ -325,5 +339,44 @@ function iniciar() {
     http.createServer(onRequest).listen(8887);
     console.log("Servidor iniciat. http://localhost:8887/home");
 }
+function repartirPeces(peces){
+    var p =[];
+    var p1 = [];
+    var p2 = [];
+    for(var i=0; i<peces.length;){
+        k = Math.floor(Math.random() * peces.length);
+        var numAlreadyIn = false;
+        for(var j=0; j<p.length;j++){
+            if(p[j] == k){
+                numAlreadyIn = true;
+                break;
+            }else{
+                numAlreadyIn = false;
 
+            }
+        }p.push(k);
+        if(!numAlreadyIn) {
+            if (i % 2 == 1){
+                p1.push(k);
+            }else if (i % 2 == 0) {
+                p2.push(k);
+            }
+
+            i++;
+        }
+    }//player1Hand = p1;
+    //player2Hand = p2;
+    retornarPecesImg(p1,p2);
+}
+
+
+ function retornarPecesImg(peces1,peces2) {
+     for(var i= 0; i<peces1.length;i++){
+     player1Hand[i] = pieces[peces1[i]];
+     };
+
+     for(var j= 0; j<peces2.length;j++){
+     player2Hand[j] = pieces[peces2[j]];
+     }
+ }
 exports.iniciar = iniciar;

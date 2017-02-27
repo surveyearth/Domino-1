@@ -16,7 +16,13 @@
 </div>
 
 <div id="dominoDiv" hidden>
-    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <div id="jugades"></div>
+    <div id="dropZonesDiv" >
+        <div id="dropEsq" class="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="piecesdDivEsq" class="centralZone"></div>
+        <div id="piecesdDivDre" class="centralZone"></div>
+        <div id="dropDre" class="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
     <div id="domino"></div>
 </div>
 

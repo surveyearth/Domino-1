@@ -16,7 +16,7 @@
 var id = 0;
 var rightMove;
 var pieces = [];
-var playedPiece;
+var playedPieces = [];
 var id_interval;
 
 /*window.onload = function () {
@@ -62,23 +62,32 @@ function callbackAJAXJoc() {
  */
 function mostrarJoc() {
     var p=3;
-    pieces = dada.pieces;
+    id = dada.id;
+    if(id == 1){
+        pieces = dada.pieces1;
+    }else if(id ==2){
+        pieces = dada.pieces2;
+    }
     for (var i=0;i<pieces.length;i++) {
-        var b = document.createElement('button');
-        b.id = "p"+pieces[i];
+        var b = document.createElement('img');
+        b.id = pieces[i];
+        b.height = 90;
+        b.width = 45;
         b.draggable = true;
         var srcImg ="/imatge?img="+pieces[i]+".png";
-        var idImg = pieces[i];
-        b.innerHTML = '<img src='+srcImg+' id='+idImg+' height="90" width="45">';
+        b.src = srcImg;
         //"<img src=img\\"+pieces[i]+">";
         b.className = "piece";
         b.onclick = function(e) {
             //onClickPiece(b.id);
-            playedPiece = e.target.id;
-            cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
+            //playedPiece = e.target.id;
+            //cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
+        };
+        b.ondragstart = function(e) {
+           drag(e);
         };
         document.getElementById('domino').appendChild(b);
-        document.getElementById('idDiv').innerText = "Piece: "+dada.id;
+        document.getElementById('idDiv').innerText = "Piece: "+id;
         console.log(pieces[i]);
     }
 }
@@ -112,23 +121,70 @@ function callbackAJAXjugada() {
 }
 
 function mostrarJugada() {
+    document.getElementById('jugades').innerHTML = "";
     piece = dada.tirada;
     id = dada.id;
     rightMove = dada.correct;
-    document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove;
+    playedPieces = dada.playedPieces;
+    document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove + "pecesJugades: "+ playedPieces.toString();
+        for(var i = 0; i < playedPieces.length ; i++){
+            var b = document.createElement('img');
+            b.id = playedPieces[i];
+            b.height = 90;
+            b.width = 45;
+            b.draggable = false;
+            var srcImg ="/imatge?img="+playedPieces[i]+".png";
+            b.src = srcImg;
+            b.className = "piece";
+            b.title =  playedPieces[i]+": J"+id;
+            document.getElementById('jugades').appendChild(b);
+    }
 
+
+
+
+
+
+    //"<img src=img\\"+pieces[i]+">";
+
+    b.onclick = function(e) {
+        //onClickPiece(b.id);
+        //playedPiece = e.target.id;
+        //cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
+    };
+    b.ondragstart = function(e) {
+        drag(e);
+    };
 
 }
+/**
+ * Métode que marca quina es la zona de "drop" de les peces
+ * @param ev
+ */
 function allowDrop(ev) {
     ev.preventDefault();
 }
 
+/**
+ * Métode que marca que haura de realitzar el objecte al ser arrossegat
+ * @param ev
+ */
 function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+    ev.dataTransfer.setData("piece", ev.target.id);
+
 }
 
+/**
+ * Métode que marca que haura de realitzar el objecte al ser deixat
+ * @param ev
+ */
 function drop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
+    var data = ev.dataTransfer.getData("piece");
+    document.getElementById(data).draggable = false;
+    var div = document.getElementById("piecesdDivEsq");
+    div.appendChild(document.getElementById(data));
+    playedPiece = data;
+    cridarAJAXjugada('/playedPiece?idJugador=' + id +'&piece='+ playedPiece + '&costat='+ev.target.id);
+    //ev.target.appendChild(document.getElementById(data));
 }

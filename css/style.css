@@ -8,3 +8,16 @@ h1 {
     font-family: 'Indie Flower', cursive;
     font-size: 4em;
 }
+#jugades {
+    text-align: center;
+    background-image: url("/imatge?img=tapete.png");
+}
+#dropZonesDiv{
+    display: flex;
+}
+
+.dropZone  {
+    width: 350px;
+    height: 100px;
+
+}
