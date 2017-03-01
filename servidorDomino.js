@@ -167,6 +167,7 @@ function iniciar() {
 
             var objecteJoc = {
                 "id" : consulta['idJugador'],
+                "torn" : 1,
                 "pieces":[
                     "0,0","0,1","0,2","0,3","0,4","0,5","0,6",
                     "1,1","1,2","1,3","1,4","1,5","1,6",
@@ -175,128 +176,7 @@ function iniciar() {
                     "4,4","4,5","4,6",
                     "5,5","5,6",
                     "6,6"
-                ]/*,
-                "p00": {
-                    "u": 0,
-                    "d": 0
-                },
-                "p01": {
-                    "u": 0,
-                    "d": 1
-                },
-                "p02": {
-                    "u": 0,
-                    "d": 2
-                },
-                "p03": {
-                    "u": 0,
-                    "d": 3
-                },
-                "p04": {
-                    "u": 0,
-                    "d": 4
-                },
-                "p05": {
-                    "u": 0,
-                    "d": 5
-                },
-                "p06": {
-                    "u": 0,
-                    "d": 6
-                },
-                "p11": {
-                    "u": 1,
-                    "d": 1
-                },
-                "p12": {
-                    "u": 1,
-                    "d": 2
-                },
-                "p13": {
-                    "u": 1,
-                    "d": 3
-                },
-                "p14": {
-                    "u": 1,
-                    "d": 4
-                },
-                "p15": {
-                    "u": 1,
-                    "d": 5
-                },
-                "p16": {
-                    "u": 1,
-                    "d": 6
-                },
-                "p22": {
-                    "u": 2,
-                    "d": 2
-                },
-                "p23": {
-                    "u": 2,
-                    "d": 3
-                },
-                "p24": {
-                    "u": 2,
-                    "d": 4
-                },
-                "p25": {
-                    "u": 2,
-                    "d": 5
-                },
-                "p26": {
-                    "u": 2,
-                    "d": 6
-                },
-                "p33": {
-                    "u": 3,
-                    "d": 3
-                },
-                "p34": {
-                    "u": 3,
-                    "d": 4
-                },
-                "p35": {
-                    "u": 3,
-                    "d": 5
-                },
-                "p36": {
-                    "u": 3,
-                    "d": 6
-                },
-                "p44": {
-                    "u": 4,
-                    "d": 4
-                },
-                "p45": {
-                    "u": 4,
-                    "d": 5
-                },
-                "p46": {
-                    "u": 4,
-                    "d": 6
-                },
-                "p55": {
-                    "u": 5,
-                    "d": 5
-                },
-                "p56": {
-                    "u": 5,
-                    "d": 6
-                },
-                "p66": {
-                    "u": 6,
-                    "d": 6
-                },
-                "p24": {
-                    "u": 2,
-                    "d": 4
-                }*/
-
-            };
-
-            var objecteJoc = {
-                "id" : consulta['idJugador'],
+                ],
                 "pieces1": player1Hand,
                 "pieces2": player2Hand
             };
@@ -306,17 +186,24 @@ function iniciar() {
             response.writeHead(200, {
                 "Content-Type": "text/xml; charset=utf-8"
             });
-            if(consulta['costat'] == "dropDre" ){
+            var torn = consulta['torn'];
+           if(consulta['costat'] == "dropDre" ){
                 playedPieces.push(consulta['piece']);
             }else if(consulta['costat'] == "dropEsq" ){
                 playedPieces.unshift(consulta['piece']);
             }
 
+            if(torn == 1 ){
+                torn = 2;
+            }else if(torn == 2 ){
+                torn = 1;
+            }
 
             var objecteTirada = {
                 "id" : consulta['idJugador'],
                 "tirada" : consulta['piece'],
                 "correct" : true,
+                "torn": torn,
                 "playedPieces" : playedPieces
             };
 
@@ -324,7 +211,30 @@ function iniciar() {
             response.write(JSON.stringify(objecteTirada));
             response.end();
 
-        } else {
+        } else if(pathname == '/canviTorn') {
+            response.writeHead(200, {
+                "Content-Type": "text/xml; charset=utf-8"
+            });
+            var torn = consulta['torn'];
+
+
+            if(torn == 1 ){
+                torn = 2;
+            }else if(torn == 2 ){
+                torn = 1;
+            }
+
+            var objecteCanvi = {
+                "id" : consulta['idJugador'],
+                "torn": torn,
+                "playedPieces" : playedPieces
+            };
+
+            console.log("El jugador "+consulta['idJugador']+" ha tirat "+consulta['piece']);
+            response.write(JSON.stringify(objecteCanvi));
+            response.end();
+
+        }else {
             response.writeHead(404, {
                 "Content-Type": "text/html; charset=utf-8"
             });

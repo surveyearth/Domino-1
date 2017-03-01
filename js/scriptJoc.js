@@ -17,18 +17,12 @@ var id = 0;
 var rightMove;
 var pieces = [];
 var playedPieces = [];
-var id_interval;
+var tornActual = 0;
+var id_canviTorn;
 
-/*window.onload = function () {
-    var xhr;
-    var dada;
-    cridaAJAXJoc('/start?idJugador=' + id);
-    //id_interval = setInterval(function () {
-        //amb aixo creem el JSON amb les dades del servidor
-        cridaAJAXinicial('/index?idJugador=' + id);
-    //}, 3000);};*/
-
-
+function startActu(){
+ setInterval(canviTorn(), 3000);
+}
 
 ///////////////////////////////////////////////////////
 //Crida AJAX que només s'executa al entrar al joc
@@ -54,7 +48,6 @@ function callbackAJAXJoc() {
             console.log('problemes amb l\'AJAX');
         }
     }
-
 }
 
 /**
@@ -63,11 +56,14 @@ function callbackAJAXJoc() {
 function mostrarJoc() {
     var p=3;
     id = dada.id;
+    tornActual = dada.torn;
+
     if(id == 1){
         pieces = dada.pieces1;
     }else if(id ==2){
         pieces = dada.pieces2;
     }
+
     for (var i=0;i<pieces.length;i++) {
         var b = document.createElement('img');
         b.id = pieces[i];
@@ -117,7 +113,6 @@ function callbackAJAXjugada() {
             console.log('problemes amb l\'AJAX');
         }
     }
-
 }
 
 function mostrarJugada() {
@@ -126,6 +121,7 @@ function mostrarJugada() {
     id = dada.id;
     rightMove = dada.correct;
     playedPieces = dada.playedPieces;
+    tornActual = dada.torn;
     document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove + "pecesJugades: "+ playedPieces.toString();
         for(var i = 0; i < playedPieces.length ; i++){
             var b = document.createElement('img');
@@ -141,28 +137,60 @@ function mostrarJugada() {
     }
 
 
-
-
-
-
-    //"<img src=img\\"+pieces[i]+">";
-
-    b.onclick = function(e) {
-        //onClickPiece(b.id);
-        //playedPiece = e.target.id;
-        //cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
-    };
-    b.ondragstart = function(e) {
-        drag(e);
-    };
-
 }
+///////////////////////////////////////////////////////////////////////////
+
+//Crida AJAX que només s'executa al entrar a la pàgina
+function cridaAJAXcanviTorn(url) {
+    xhr = new XMLHttpRequest();
+
+    if (!xhr) {
+        alert('problemes amb XHR');
+        return false;
+    }
+    xhr.onreadystatechange = callbackAJAXcanviTorn;
+    xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
+    xhr.send(null);
+}
+
+//Callback AJAX que només s'executa al entrar a la pàgina
+function callbackAJAXcanviTorn() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+            //dades = xhr.response;
+            dada = JSON.parse(xhr.response);
+            canviTorn();
+        } else {
+            console.log('problemes amb l\'AJAX');
+        }
+    }
+}
+
+/**
+ * Method that shows index page
+ */
+function canviTorn(a) {
+    id = dada.id;
+    tornActual = dada.torn;
+    if(tornActual != id) {
+        cridaAJAXcanviTorn('/playedPiece?idJugador=' + id +'&torn='+tornActual);
+        //clearInterval(id_canviTorn);
+    }else{
+        a = true;
+    }
+}
+///////////////////////////////////////////////////////////////////////////
 /**
  * Métode que marca quina es la zona de "drop" de les peces
  * @param ev
  */
 function allowDrop(ev) {
-    ev.preventDefault();
+
+    if(tornActual == id){
+        ev.preventDefault();
+    }else {
+        return false;
+    }
 }
 
 /**
@@ -185,6 +213,6 @@ function drop(ev) {
     var div = document.getElementById("piecesdDivEsq");
     div.appendChild(document.getElementById(data));
     playedPiece = data;
-    cridarAJAXjugada('/playedPiece?idJugador=' + id +'&piece='+ playedPiece + '&costat='+ev.target.id);
+    cridarAJAXjugada('/playedPiece?idJugador=' + id +'&piece='+ playedPiece + '&costat='+ev.target.id + '&torn='+tornActual);
     //ev.target.appendChild(document.getElementById(data));
 }
