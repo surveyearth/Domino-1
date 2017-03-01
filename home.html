@@ -6,16 +6,19 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="js/properties.js"></script>
     <script type="text/javascript" src="js/scriptHome.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="js/scriptJoc.js"></script>
 </head>
 <body>
-<div id="homeDiv">
+<div class="central" id="title">
+    <h1> Domino  </h1>
+</div>
+
+<div class="central" id="homeDiv">
     <div id="missatge"></div>
     <button type="button" id="btnJugar" onclick="toGame();" href="" hidden>JUGAR</button>
 </div>
 
-<div id="dominoDiv" hidden>
+<div class="central" id="dominoDiv" hidden>
     <div id="jugades"></div>
     <div id="dropZonesDiv" >
         <div id="dropEsq" class="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>

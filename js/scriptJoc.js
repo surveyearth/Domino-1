@@ -123,7 +123,7 @@ function mostrarJugada() {
     playedPieces = dada.playedPieces;
     tornActual = dada.torn;
     document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove + "pecesJugades: "+ playedPieces.toString();
-        for(var i = 0; i < playedPieces.length ; i++){
+      for(var i = 0; i < playedPieces.length ; i++){
             var b = document.createElement('img');
             b.id = playedPieces[i];
             b.height = 90;
@@ -211,7 +211,7 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("piece");
     document.getElementById(data).draggable = false;
     var div = document.getElementById("piecesdDivEsq");
-    div.appendChild(document.getElementById(data));
+    //div.appendChild(document.getElementById(data));
     playedPiece = data;
     cridarAJAXjugada('/playedPiece?idJugador=' + id +'&piece='+ playedPiece + '&costat='+ev.target.id + '&torn='+tornActual);
     //ev.target.appendChild(document.getElementById(data));
