@@ -21,7 +21,7 @@ h1 {
     background-image: url("/imatge?img=tapete.png");
     background-repeat: no-repeat;
     border-color: black;
-    border-width: medium;
+    border-width: thick;
 }
 #dropZonesDiv{
     display: flex;
@@ -31,17 +31,17 @@ h1 {
     background-image: url("/imatge?img=right.png");
     background-repeat: no-repeat;
     background-position: center;
-    width: 250px;
-    height: 250px;
-    margin-left: 8%;
+    width: 100px;
+    height: 115px;
+    margin-left: 5%;
 }
 
 #dropEsq {
     background-image: url("/imatge?img=left.png");
     background-repeat: no-repeat;
     background-position: center;
-    width: 250px;
-    height: 250px;
-    margin-right: 8%;
+    width: 100px;
+    height: 115px;
+    margin-right: 5%;
 }
 }

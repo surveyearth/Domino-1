@@ -19,6 +19,7 @@ var querystring = require("querystring");
 var fs = require('fs');
 var numPlayers = [];
 var playedPieces = [];
+var torn;
 var player1Hand  =[];
 var player2Hand  =[];
 var pieces =  ["0,0","0,1","0,2","0,3","0,4","0,5","0,6","1,1","1,2","1,3","1,4","1,5","1,6", "2,2","2,3","2,4","2,5","2,6", "3,3","3,4","3,5",
@@ -186,7 +187,7 @@ function iniciar() {
             response.writeHead(200, {
                 "Content-Type": "text/xml; charset=utf-8"
             });
-            var torn = consulta['torn'];
+            torn = consulta['torn'];
            if(consulta['costat'] == "dropDre" ){
                 playedPieces.push(consulta['piece']);
             }else if(consulta['costat'] == "dropEsq" ){
@@ -211,27 +212,18 @@ function iniciar() {
             response.write(JSON.stringify(objecteTirada));
             response.end();
 
-        } else if(pathname == '/canviTorn') {
+        } else if(pathname == '/updateTorn') {
             response.writeHead(200, {
                 "Content-Type": "text/xml; charset=utf-8"
             });
-            var torn = consulta['torn'];
 
-
-            if(torn == 1 ){
-                torn = 2;
-            }else if(torn == 2 ){
-                torn = 1;
-            }
-
-            var objecteCanvi = {
+            var objecteUpdate = {
                 "id" : consulta['idJugador'],
                 "torn": torn,
                 "playedPieces" : playedPieces
             };
 
-            console.log("El jugador "+consulta['idJugador']+" ha tirat "+consulta['piece']);
-            response.write(JSON.stringify(objecteCanvi));
+            response.write(JSON.stringify(objecteUpdate));
             response.end();
 
         }else {

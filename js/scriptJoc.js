@@ -17,15 +17,12 @@ var id = 0;
 var rightMove;
 var pieces = [];
 var playedPieces = [];
-var tornActual = 0;
-var id_canviTorn;
-
-function startActu(){
- setInterval(canviTorn(), 3000);
-}
 
 ///////////////////////////////////////////////////////
-//Crida AJAX que només s'executa al entrar al joc
+
+/**
+ * Crida AJAX que només s'executa al entrar al joc
+ */
 function cridaAJAXJoc(url) {
     xhr = new XMLHttpRequest();
 
@@ -37,7 +34,10 @@ function cridaAJAXJoc(url) {
     xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
     xhr.send(null);
 }
-//Callback AJAX que només s'executa al entrar al joc
+
+/**
+* Callback AJAX que només s'executa al entrar al joc
+ */
 function callbackAJAXJoc() {
     if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
@@ -51,7 +51,7 @@ function callbackAJAXJoc() {
 }
 
 /**
- * Method that shows game page
+ * Métode per mostrar la pàgina del joc
  */
 function mostrarJoc() {
     var p=3;
@@ -64,6 +64,16 @@ function mostrarJoc() {
         pieces = dada.pieces2;
     }
 
+        document.addEventListener("load",setInterval(function () {
+            if(tornActual != id) {
+                cridaAJAXcanviTorn('/updateTorn?idJugador=' + id );
+                document.getElementById("tornDiv").innerHTML = "<p>Es el torn del jugador"+tornActual +". Espera.</p>";
+            }else if(tornActual == id){
+                document.getElementById("tornDiv").innerHTML = "<p>Es el teu torn jugador"+tornActual +".</p><p> Arrosega al costat la peça que vulguis jugar.</p>";
+            }
+        }, 3000));
+
+
     for (var i=0;i<pieces.length;i++) {
         var b = document.createElement('img');
         b.id = pieces[i];
@@ -74,11 +84,6 @@ function mostrarJoc() {
         b.src = srcImg;
         //"<img src=img\\"+pieces[i]+">";
         b.className = "piece";
-        b.onclick = function(e) {
-            //onClickPiece(b.id);
-            //playedPiece = e.target.id;
-            //cridarAJAXjugada('/playedPiece?piece='+ playedPiece + "&idJugador=" + id);
-        };
         b.ondragstart = function(e) {
            drag(e);
         };
@@ -89,7 +94,10 @@ function mostrarJoc() {
 }
 
 //////////////////////////////////////////////////////////////////////
-//Crida AJAX que s'executa quan els jugadors tiren una fitxa
+
+/**
+* Crida AJAX que s'executa quan els jugadors tiren una fitxa
+ */
 function cridarAJAXjugada(url) {
     xhr = new XMLHttpRequest();
 
@@ -102,7 +110,10 @@ function cridarAJAXjugada(url) {
     xhr.send(null);
 }
 
-//Callback AJAX que només s'executa al entrar a la pàgina
+
+/**
+ *Callback AJAX que s'executa quan els jugadors tiren una fitxa
+ */
 function callbackAJAXjugada() {
     if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
@@ -114,15 +125,18 @@ function callbackAJAXjugada() {
         }
     }
 }
-
+/**
+ * Métode per mostrar quan els jugadors tiren una fitxa
+ */
 function mostrarJugada() {
-    document.getElementById('jugades').innerHTML = "";
+    document.getElementById('jugades').innerText = "";
     piece = dada.tirada;
     id = dada.id;
     rightMove = dada.correct;
     playedPieces = dada.playedPieces;
     tornActual = dada.torn;
-    document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove + "pecesJugades: "+ playedPieces.toString();
+    //document.getElementById('idDiv').innerText = "Jugador: "+id+" tirada: "+ piece +" correcte?: " + rightMove + "pecesJugades: "+ playedPieces.toString();
+    document.getElementById('idDiv').innerText = "Hola Jugador: "+id;
       for(var i = 0; i < playedPieces.length ; i++){
             var b = document.createElement('img');
             b.id = playedPieces[i];
@@ -135,51 +149,10 @@ function mostrarJugada() {
             b.title =  playedPieces[i]+": J"+id;
             document.getElementById('jugades').appendChild(b);
     }
-
-
 }
+
 ///////////////////////////////////////////////////////////////////////////
 
-//Crida AJAX que només s'executa al entrar a la pàgina
-function cridaAJAXcanviTorn(url) {
-    xhr = new XMLHttpRequest();
-
-    if (!xhr) {
-        alert('problemes amb XHR');
-        return false;
-    }
-    xhr.onreadystatechange = callbackAJAXcanviTorn;
-    xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
-    xhr.send(null);
-}
-
-//Callback AJAX que només s'executa al entrar a la pàgina
-function callbackAJAXcanviTorn() {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-            //dades = xhr.response;
-            dada = JSON.parse(xhr.response);
-            canviTorn();
-        } else {
-            console.log('problemes amb l\'AJAX');
-        }
-    }
-}
-
-/**
- * Method that shows index page
- */
-function canviTorn(a) {
-    id = dada.id;
-    tornActual = dada.torn;
-    if(tornActual != id) {
-        cridaAJAXcanviTorn('/playedPiece?idJugador=' + id +'&torn='+tornActual);
-        //clearInterval(id_canviTorn);
-    }else{
-        a = true;
-    }
-}
-///////////////////////////////////////////////////////////////////////////
 /**
  * Métode que marca quina es la zona de "drop" de les peces
  * @param ev
@@ -209,10 +182,66 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("piece");
-    document.getElementById(data).draggable = false;
+    //document.getElementById(data).draggable = false;
+    document.getElementById(data).setAttribute("hidden",true);
     var div = document.getElementById("piecesdDivEsq");
     //div.appendChild(document.getElementById(data));
     playedPiece = data;
     cridarAJAXjugada('/playedPiece?idJugador=' + id +'&piece='+ playedPiece + '&costat='+ev.target.id + '&torn='+tornActual);
     //ev.target.appendChild(document.getElementById(data));
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+/**
+ *Crida AJAX que s'executa per comprobar si es el teu torn
+ */
+function cridaAJAXcanviTorn(url) {
+    xhr = new XMLHttpRequest();
+
+    if (!xhr) {
+        alert('problemes amb XHR');
+        return false;
+    }
+    xhr.onreadystatechange = callbackAJAXcanviTorn;
+    xhr.open('POST', url, true); // el 3r paràmetre indica que és asíncron
+    xhr.send(null);
+}
+
+/**
+ *Callback AJAX que  s'executa per comprobar si es el teu torn
+*/
+function callbackAJAXcanviTorn() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+            //dades = xhr.response;
+            dada = JSON.parse(xhr.response);
+            canviTorn();
+        } else {
+            console.log('problemes amb l\'AJAX');
+        }
+    }
+}
+
+/**
+ * Métode que s'executa per comprobar si es el teu torn
+ */
+function canviTorn(id, torn) {
+    tornActual = dada.torn;
+    playedPieces = dada.playedPieces;
+    document.getElementById('jugades').innerText = "";
+    for(var i = 0; i < playedPieces.length ; i++){
+        var b = document.createElement('img');
+        b.id = playedPieces[i];
+        b.height = 90;
+        b.width = 45;
+        b.draggable = false;
+        var srcImg ="/imatge?img="+playedPieces[i]+".png";
+        b.src = srcImg;
+        b.className = "piece";
+        b.title =  playedPieces[i]+": J"+id;
+        document.getElementById('jugades').appendChild(b);
+    }
+     //clearInterval(id_canviTorn);
+
 }
